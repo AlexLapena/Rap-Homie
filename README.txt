@@ -1,0 +1,1 @@
+https://www.androidauthority.com/lets-build-a-simple-text-editor-for-android-773774/

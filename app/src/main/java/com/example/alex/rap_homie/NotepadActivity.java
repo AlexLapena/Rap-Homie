@@ -3,7 +3,6 @@ package com.example.alex.rap_homie;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,25 +17,29 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class MainActivity extends AppCompatActivity {
-    EditText EditText1;
+public class NotepadActivity extends AppCompatActivity {
+    EditText songText;
+    EditText titleText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.notepad_activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        titleText = (EditText) findViewById(R.id.titleText);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Save("Note1.txt");
+                Save(titleText.getText().toString());
             }
         });
 
-        EditText1 = (EditText) findViewById(R.id.EditText1);
-        EditText1.setText(Open("Note1.txt"));
+        songText = (EditText) findViewById(R.id.EditText1);
+        songText.setText(Open(titleText.getText().toString()));
     }
 
     @Override
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             OutputStreamWriter out =
                     new OutputStreamWriter(openFileOutput(fileName, 0));
-            out.write(EditText1.getText().toString());
+            out.write(songText.getText().toString());
             out.close();
             Toast.makeText(this, "Note saved!", Toast.LENGTH_SHORT).show();
         } catch (Throwable t) {
@@ -92,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        Intent myIntent = new Intent(MainActivity.this, NoteSelect.class);
-        MainActivity.this.startActivity(myIntent);
+        Intent myIntent = new Intent(NotepadActivity.this, NoteSelect.class);
+        NotepadActivity.this.startActivity(myIntent);
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {

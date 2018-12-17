@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -57,10 +58,10 @@ public class NoteSelect extends AppCompatActivity {
         File directory;
         directory = getFilesDir();
         File[] files = directory.listFiles();
-        String theFile;
-        for (int f = 1; f <= files.length; f++) {
-            theFile = "Note" + f + ".txt";
-            NotesBuilder note = new NotesBuilder(theFile, Open(theFile));
+
+        for (File songFile : files) {
+            String songTitle = songFile.getName();
+            NotesBuilder note = new NotesBuilder(songTitle, Open(songTitle));
             notesList.add(note);
         }
 
