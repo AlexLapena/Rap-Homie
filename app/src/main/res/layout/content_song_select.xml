@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".NoteSelect"
-    tools:showIn="@layout/activity_note_select">
+    tools:context=".SongSelect"
+    tools:showIn="@layout/activity_song_select">
 
 </android.support.constraint.ConstraintLayout>

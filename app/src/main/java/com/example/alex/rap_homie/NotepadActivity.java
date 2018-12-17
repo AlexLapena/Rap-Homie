@@ -17,6 +17,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+/**
+ * Editable notepad for creating song lyrics
+ */
 public class NotepadActivity extends AppCompatActivity {
     EditText songText;
     EditText titleText;
@@ -95,7 +98,7 @@ public class NotepadActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        Intent myIntent = new Intent(NotepadActivity.this, NoteSelect.class);
+        Intent myIntent = new Intent(NotepadActivity.this, SongSelect.class);
         NotepadActivity.this.startActivity(myIntent);
 
         //noinspection SimplifiableIfStatement

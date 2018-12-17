@@ -3,14 +3,12 @@ package com.example.alex.rap_homie;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -20,7 +18,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NoteSelect extends AppCompatActivity {
+/**
+ * Main Page - Displays all available songs
+ */
+public class SongSelect extends AppCompatActivity {
 
     private List<NotesBuilder> notesList = new ArrayList<>();
     private NotesAdapter nAdapter;
@@ -29,7 +30,7 @@ public class NoteSelect extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note_select);
+        setContentView(R.layout.activity_song_select);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -37,8 +38,8 @@ public class NoteSelect extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent( NoteSelect.this, NotepadActivity.class);
-                NoteSelect.this.startActivity(myIntent);
+                Intent myIntent = new Intent( SongSelect.this, NotepadActivity.class);
+                SongSelect.this.startActivity(myIntent);
             }
         });
 
