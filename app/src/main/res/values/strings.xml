@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Rap Homie</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_note_select">NoteSelect</string>
+    <string name="title_activity_note_select">Song Select</string>
 </resources>
