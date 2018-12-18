@@ -7,6 +7,10 @@ public class NotesBuilder {
     public NotesBuilder() {
     }
 
+    public NotesBuilder(String title) {
+        this.title = title;
+    }
+
     public NotesBuilder(String title, String content) {
         this.title = title;
         this.content = content;

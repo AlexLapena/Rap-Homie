@@ -63,7 +63,7 @@ public class SongSelect extends AppCompatActivity {
 
         for (File songFile : files) {
             String songTitle = songFile.getName();
-            NotesBuilder note = new NotesBuilder(songTitle, Open(songTitle));
+            NotesBuilder note = new NotesBuilder(songTitle);
             notesList.add(note);
         }
 
