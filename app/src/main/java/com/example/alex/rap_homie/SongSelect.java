@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -24,8 +26,7 @@ import java.util.List;
 public class SongSelect extends AppCompatActivity {
 
     private List<NotesBuilder> notesList = new ArrayList<>();
-    private NotesAdapter nAdapter;
-    private RecyclerView notesRecycler;
+    ArrayList<String> titleArray = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,17 +44,16 @@ public class SongSelect extends AppCompatActivity {
             }
         });
 
-        notesRecycler = (RecyclerView) findViewById(R.id.notes);
-
-        nAdapter = new NotesAdapter(notesList);
-        RecyclerView.LayoutManager mLayoutManager =
-                new LinearLayoutManager(getApplicationContext());
-        notesRecycler.setLayoutManager(mLayoutManager);
-        notesRecycler.setItemAnimator(new DefaultItemAnimator());
-        notesRecycler.setAdapter(nAdapter);
-
         prepareNotes();
 
+        for (NotesBuilder title : notesList) {
+            titleArray.add(title.getTitle());
+        }
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.list_row, titleArray);
+
+        ListView listView = (ListView) findViewById(R.id.song_list);
+        listView.setAdapter(adapter);
     }
 
     private void prepareNotes() {
