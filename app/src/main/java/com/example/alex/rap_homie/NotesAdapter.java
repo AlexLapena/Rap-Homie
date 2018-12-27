@@ -17,8 +17,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
 
         public MyViewHolder(View view) {
             super(view);
-   //         title = (TextView) view.findViewById(R.id.title);
- //           content = (TextView) view.findViewById(R.id.content);
+//            FIXME - Add back in when title list is resolved.
+//            title = (TextView) view.findViewById(R.id.title);
+//            content = (TextView) view.findViewById(R.id.content);
         }
     }
 

@@ -26,7 +26,7 @@ import java.util.List;
 public class SongSelect extends AppCompatActivity {
 
     private List<NotesBuilder> notesList = new ArrayList<>();
-    ArrayList<String> titleArray = new ArrayList<String>();
+    private ArrayList<String> titleArray = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class SongSelect extends AppCompatActivity {
             titleArray.add(title.getTitle());
         }
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.list_row, titleArray);
+        ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.list_row, titleArray);
 
         ListView listView = (ListView) findViewById(R.id.song_list);
         listView.setAdapter(adapter);
@@ -66,7 +66,6 @@ public class SongSelect extends AppCompatActivity {
             NotesBuilder note = new NotesBuilder(songTitle);
             notesList.add(note);
         }
-
     }
 
     public String Open(String fileName) {
@@ -87,7 +86,6 @@ public class SongSelect extends AppCompatActivity {
         } catch (java.io.FileNotFoundException e) {} catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
-
         return content;
     }
 }
