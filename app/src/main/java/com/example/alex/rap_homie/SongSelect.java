@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,14 +48,25 @@ public class SongSelect extends AppCompatActivity {
 
         prepareNotes();
 
+        // FIXME - Better way to do this, such as array copy.
         for (NotesBuilder title : notesList) {
             titleArray.add(title.getTitle());
         }
 
         ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.list_row, titleArray);
-
         ListView listView = (ListView) findViewById(R.id.song_list);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String[] titleAsArray = Arrays.copyOf(titleArray.toArray(), titleArray.toArray().length, String[].class);
+                Toast.makeText(getApplicationContext(),titleAsArray[i],Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(),NotepadActivity.class);
+                intent.putExtra("SONG_TITLE_SELECTED", titleAsArray[i]); //FIXME - https://stackoverflow.com/questions/2091465/how-do-i-pass-data-between-activities-in-android-application
+                startActivity(intent);
+            }
+        });
     }
 
     private void prepareNotes() {

@@ -31,6 +31,9 @@ public class NotepadActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // If a new note, default string. If not - add in the getExtras.
+        String sessionId = getIntent().getStringExtra("SONG_TITLE_SELECTED");
+
         titleText = (EditText) findViewById(R.id.titleText);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
