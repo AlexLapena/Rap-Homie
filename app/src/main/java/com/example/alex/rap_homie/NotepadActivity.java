@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -31,10 +32,9 @@ public class NotepadActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // If a new note, default string. If not - add in the getExtras.
         String sessionId = getIntent().getStringExtra("SONG_TITLE_SELECTED");
-
         titleText = (EditText) findViewById(R.id.titleText);
+        titleText.setText(sessionId ,TextView.BufferType.EDITABLE);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -42,7 +42,7 @@ public class NotepadActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Save(titleText.getText().toString());
             }
-        });
+        }); 
 
         songText = (EditText) findViewById(R.id.EditText1);
         songText.setText(Open(titleText.getText().toString()));
@@ -96,9 +96,6 @@ public class NotepadActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         Intent myIntent = new Intent(NotepadActivity.this, SongSelect.class);

@@ -61,9 +61,8 @@ public class SongSelect extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String[] titleAsArray = Arrays.copyOf(titleArray.toArray(), titleArray.toArray().length, String[].class);
-                Toast.makeText(getApplicationContext(),titleAsArray[i],Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getApplicationContext(),NotepadActivity.class);
-                intent.putExtra("SONG_TITLE_SELECTED", titleAsArray[i]); //FIXME - https://stackoverflow.com/questions/2091465/how-do-i-pass-data-between-activities-in-android-application
+                intent.putExtra("SONG_TITLE_SELECTED", titleAsArray[i]);
                 startActivity(intent);
             }
         });
