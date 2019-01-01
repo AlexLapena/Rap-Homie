@@ -68,6 +68,13 @@ public class SongSelect extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
+
     private void prepareNotes() {
         File directory;
         directory = getFilesDir();

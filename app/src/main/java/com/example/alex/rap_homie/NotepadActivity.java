@@ -42,7 +42,7 @@ public class NotepadActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Save(titleText.getText().toString());
             }
-        }); 
+        });
 
         songText = (EditText) findViewById(R.id.EditText1);
         songText.setText(Open(titleText.getText().toString()));
@@ -57,11 +57,10 @@ public class NotepadActivity extends AppCompatActivity {
 
     public void Save(String fileName) {
         try {
-            OutputStreamWriter out =
-                    new OutputStreamWriter(openFileOutput(fileName, 0));
+            OutputStreamWriter out = new OutputStreamWriter(openFileOutput(fileName, 0));
             out.write(songText.getText().toString());
             out.close();
-            Toast.makeText(this, "Note saved!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Song saved!", Toast.LENGTH_SHORT).show();
         } catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
@@ -98,13 +97,21 @@ public class NotepadActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        Intent myIntent = new Intent(NotepadActivity.this, SongSelect.class);
-        NotepadActivity.this.startActivity(myIntent);
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent myIntent = new Intent(NotepadActivity.this, SongSelect.class);
+            NotepadActivity.this.startActivity(myIntent);
         }
+        else if (id == R.id.delete_song) {
+            File dir = getFilesDir();
+            File file = new File(dir, titleText.getText().toString());
+            if (file.exists()) {
+                file.delete();
+                Toast.makeText(this, titleText.getText().toString() + " deleted.", Toast.LENGTH_LONG).show();
+                Intent myIntent = new Intent(NotepadActivity.this, SongSelect.class);
+                NotepadActivity.this.startActivity(myIntent);
+            }
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }

@@ -4,6 +4,10 @@
     tools:context="com.example.alex.rap_homie.NotepadActivity" >
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
+        android:orderInCategory="200"
+        app:showAsAction="never" />
+    <item android:id="@+id/delete_song"
+        android:title="@string/delete_song"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>
