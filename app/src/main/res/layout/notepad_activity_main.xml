@@ -40,4 +40,11 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_menu_save" />
 
+    <Button
+        android:id="@+id/rhyme_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:text="@+string/rhyme_button" />
+
 </android.support.design.widget.CoordinatorLayout>
