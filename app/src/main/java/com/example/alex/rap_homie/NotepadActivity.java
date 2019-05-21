@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,9 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -64,16 +62,28 @@ public class NotepadActivity extends AppCompatActivity {
         final Button button = findViewById(R.id.rhyme_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                onButtonShowPopupWindowClick(v);
+                onButtonShowPopupWindowClick(v, "egg"); // FIXME
             }
         });
 
         songText = (EditText) findViewById(R.id.EditText1);
         songText.setText(Open(titleText.getText().toString()));
+
+        //Long click triggers rhymes (double tap would be nicer)
+        songText.setOnLongClickListener(new View.OnLongClickListener() {
+             @Override
+             public boolean onLongClick(View v) {
+                 int selectionStart = songText.getSelectionStart();
+                 int selectionEnd = songText.getSelectionEnd();
+
+                 String rhymeString = songText.getText().toString().substring(selectionStart, selectionEnd);
+                 onButtonShowPopupWindowClick(v, rhymeString);
+                 return true;
+             }
+        });
     }
 
-    // https://stackoverflow.com/questions/5944987/how-to-create-a-popup-window-popupwindow-in-android
-    public void onButtonShowPopupWindowClick(View view) {
+    public void onButtonShowPopupWindowClick(View view, String rhymeString) {
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -86,12 +96,11 @@ public class NotepadActivity extends AppCompatActivity {
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
         // show the popup window
-        // which view you pass in doesn't matter, it is only used for the window tolken
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
         // Populate the text of the popup window
         // FIXME - Update string intake
-        ((TextView)popupWindow.getContentView().findViewById(R.id.text_view_result)).setText(getRhymeWords("Egg"));
+        ((TextView)popupWindow.getContentView().findViewById(R.id.text_view_result)).setText(getRhymeWords(rhymeString));
 
         // dismiss the popup window when touched
         popupView.setOnTouchListener(new View.OnTouchListener() {
@@ -170,11 +179,10 @@ public class NotepadActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //https://codinginflow.com/tutorials/android/okhttp-simple-get-request
-    private String getRhymeWords(String text) {
+    private String getRhymeWords(String rhymeInput) {
         OkHttpClient client = new OkHttpClient();
 
-        String url = "https://api.datamuse.com/words?rel_rhy=" + text;
+        String url = "https://api.datamuse.com/words?rel_rhy=" + rhymeInput;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -190,7 +198,6 @@ public class NotepadActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     myResponse = response.body().string();
-
                     System.out.println(myResponse);
                 }
             }
@@ -198,7 +205,8 @@ public class NotepadActivity extends AppCompatActivity {
         return myResponse;
     }
 
-//    private parseDatamuseJSON (String json) {
-//
-//    }
+    private void parseJSON (String json) {
+        // Create button groups of words / phrases. Groups will be by syllable count, ordered by score
+    }
+
 }
