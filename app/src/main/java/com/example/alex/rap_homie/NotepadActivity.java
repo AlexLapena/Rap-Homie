@@ -20,9 +20,19 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 
 /**
  * Editable notepad for creating song lyrics
@@ -30,6 +40,7 @@ import java.io.OutputStreamWriter;
 public class NotepadActivity extends AppCompatActivity {
     EditText songText;
     EditText titleText;
+    String myResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +74,6 @@ public class NotepadActivity extends AppCompatActivity {
 
     // https://stackoverflow.com/questions/5944987/how-to-create-a-popup-window-popupwindow-in-android
     public void onButtonShowPopupWindowClick(View view) {
-
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -78,6 +88,10 @@ public class NotepadActivity extends AppCompatActivity {
         // show the popup window
         // which view you pass in doesn't matter, it is only used for the window tolken
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        // Populate the text of the popup window
+        // FIXME - Update string intake
+        ((TextView)popupWindow.getContentView().findViewById(R.id.text_view_result)).setText(getRhymeWords("Egg"));
 
         // dismiss the popup window when touched
         popupView.setOnTouchListener(new View.OnTouchListener() {
@@ -155,4 +169,36 @@ public class NotepadActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    //https://codinginflow.com/tutorials/android/okhttp-simple-get-request
+    private String getRhymeWords(String text) {
+        OkHttpClient client = new OkHttpClient();
+
+        String url = "https://api.datamuse.com/words?rel_rhy=" + text;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    myResponse = response.body().string();
+
+                    System.out.println(myResponse);
+                }
+            }
+        });
+        return myResponse;
+    }
+
+//    private parseDatamuseJSON (String json) {
+//
+//    }
 }
