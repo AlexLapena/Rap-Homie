@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,34 +55,24 @@ public class NotepadActivity extends AppCompatActivity {
         titleText.setText(sessionId ,TextView.BufferType.EDITABLE);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Save(titleText.getText().toString());
-            }
-        });
+        fab.setOnClickListener(view -> Save(titleText.getText().toString()));
 
         final Button button = findViewById(R.id.rhyme_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                onButtonShowPopupWindowClick(v, "egg"); // FIXME
-            }
+        button.setOnClickListener(v -> {
+            onButtonShowPopupWindowClick(v, "egg"); // FIXME
         });
 
         songText = (EditText) findViewById(R.id.EditText1);
         songText.setText(Open(titleText.getText().toString()));
 
         //Long click triggers rhymes (double tap would be nicer)
-        songText.setOnLongClickListener(new View.OnLongClickListener() {
-             @Override
-             public boolean onLongClick(View v) {
-                 int selectionStart = songText.getSelectionStart();
-                 int selectionEnd = songText.getSelectionEnd();
+        songText.setOnLongClickListener(v -> {
+            int selectionStart = songText.getSelectionStart();
+            int selectionEnd = songText.getSelectionEnd();
 
-                 String rhymeString = songText.getText().toString().substring(selectionStart, selectionEnd);
-                 onButtonShowPopupWindowClick(v, rhymeString);
-                 return true;
-             }
+            String rhymeString = songText.getText().toString().substring(selectionStart, selectionEnd);
+            onButtonShowPopupWindowClick(v, rhymeString);
+            return true;
         });
     }
 
@@ -103,12 +96,9 @@ public class NotepadActivity extends AppCompatActivity {
         ((TextView)popupWindow.getContentView().findViewById(R.id.text_view_result)).setText(getRhymeWords(rhymeString));
 
         // dismiss the popup window when touched
-        popupView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                popupWindow.dismiss();
-                return true;
-            }
+        popupView.setOnTouchListener((v, event) -> {
+            popupWindow.dismiss();
+            return true;
         });
     }
 
@@ -199,14 +189,32 @@ public class NotepadActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     myResponse = response.body().string();
                     System.out.println(myResponse);
+                    try {
+                        parseJSON(myResponse);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
+
+        // Fixme - first response is null
         return myResponse;
     }
 
-    private void parseJSON (String json) {
+    // FIXME
+    private void parseJSON (String json) throws JSONException {
         // Create button groups of words / phrases. Groups will be by syllable count, ordered by score
+        JSONArray jsonarray = new JSONArray(json);
+
+        for (int i = 0; i < jsonarray.length(); i++) {
+            JSONObject jsonobject = jsonarray.getJSONObject(i);
+            String word = jsonobject.getString("word");
+            String score = jsonobject.getString("score");
+            String numSyllables = jsonobject.getString("numSyllables");
+
+            System.out.println("Worst test: " + word);
+        }
     }
 
 }
