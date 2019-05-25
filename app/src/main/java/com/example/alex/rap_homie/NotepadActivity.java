@@ -1,5 +1,6 @@
 package com.example.alex.rap_homie;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -42,6 +45,7 @@ public class NotepadActivity extends AppCompatActivity {
     EditText songText;
     EditText titleText;
     String myResponse;
+    JSONArray jsonArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,7 @@ public class NotepadActivity extends AppCompatActivity {
 
         final Button button = findViewById(R.id.rhyme_button);
         button.setOnClickListener(v -> {
-            onButtonShowPopupWindowClick(v, "egg"); // FIXME
+            //onButtonShowPopupWindowClick(v, "egg"); // FIXME - Remove
         });
 
         songText = (EditText) findViewById(R.id.EditText1);
@@ -71,15 +75,19 @@ public class NotepadActivity extends AppCompatActivity {
             int selectionEnd = songText.getSelectionEnd();
 
             String rhymeString = songText.getText().toString().substring(selectionStart, selectionEnd);
-            onButtonShowPopupWindowClick(v, rhymeString);
+            try {
+                onButtonShowPopupWindowClick(v, rhymeString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             return true;
         });
     }
 
-    public void onButtonShowPopupWindowClick(View view, String rhymeString) {
+    @SuppressLint("ClickableViewAccessibility")
+    public void onButtonShowPopupWindowClick(View view, String rhymeString) throws JSONException {
         // inflate the layout of the popup window
-        LayoutInflater inflater = (LayoutInflater)
-                getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_window, null);
 
         // create the popup window
@@ -91,9 +99,17 @@ public class NotepadActivity extends AppCompatActivity {
         // show the popup window
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
-        // Populate the text of the popup window
-        // FIXME - Update string intake
-        ((TextView)popupWindow.getContentView().findViewById(R.id.text_view_result)).setText(getRhymeWords(rhymeString));
+        // Add Rhyme word buttons
+        jsonArray = getRhymeWords(rhymeString);
+        TextView t = popupWindow.getContentView().findViewById(R.id.text_view_result);
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonobject = jsonArray.getJSONObject(i);
+                t.setText(jsonobject.getString("word"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // dismiss the popup window when touched
         popupView.setOnTouchListener((v, event) -> {
@@ -169,7 +185,7 @@ public class NotepadActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private String getRhymeWords(String rhymeInput) {
+    private JSONArray getRhymeWords(String rhymeInput) {
         OkHttpClient client = new OkHttpClient();
 
         String url = "https://api.datamuse.com/words?rel_rhy=" + rhymeInput;
@@ -190,31 +206,15 @@ public class NotepadActivity extends AppCompatActivity {
                     myResponse = response.body().string();
                     System.out.println(myResponse);
                     try {
-                        parseJSON(myResponse);
+                        jsonArray = new JSONArray(myResponse);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
                 }
             }
         });
-
         // Fixme - first response is null
-        return myResponse;
+        return jsonArray;
     }
-
-    // FIXME
-    private void parseJSON (String json) throws JSONException {
-        // Create button groups of words / phrases. Groups will be by syllable count, ordered by score
-        JSONArray jsonarray = new JSONArray(json);
-
-        for (int i = 0; i < jsonarray.length(); i++) {
-            JSONObject jsonobject = jsonarray.getJSONObject(i);
-            String word = jsonobject.getString("word");
-            String score = jsonobject.getString("score");
-            String numSyllables = jsonobject.getString("numSyllables");
-
-            System.out.println("Worst test: " + word);
-        }
-    }
-
 }
