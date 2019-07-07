@@ -45,11 +45,8 @@ public class RhymeListAdaptor extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.view_listview_row, parent, false);
 
-
-        // get the reference of textView and button
+        // Set button text
         Button button = view.findViewById(R.id.word_btn);
-
-        // Set the title and button name
         button.setText(wordList.get(position));
 
         // Click listener of button
