@@ -100,9 +100,7 @@ public class NotepadActivity extends AppCompatActivity {
 
         // show the popup window
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-
-        ListView listView = popupView.findViewById(R.id.rhymeListView); //FIXME Null view
-
+        ListView listView = popupView.findViewById(R.id.rhymeListView);
 
         // Add Rhyme word buttons
         jsonArray = getRhymeWords(rhymeString);
@@ -116,13 +114,10 @@ public class NotepadActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Context not working?
         rhymeAdapter = new RhymeListAdaptor(popupWindow.getContentView().getContext(), rhymeList);
-        listView.setAdapter(rhymeAdapter); //FIXME crash here - NPE
+        listView.setAdapter(rhymeAdapter);
         rhymeAdapter.notifyDataSetChanged();
     }
-
-
 
     @Override
     public boolean  onCreateOptionsMenu(Menu menu) {
@@ -187,7 +182,6 @@ public class NotepadActivity extends AppCompatActivity {
                 NotepadActivity.this.startActivity(myIntent);
             }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
