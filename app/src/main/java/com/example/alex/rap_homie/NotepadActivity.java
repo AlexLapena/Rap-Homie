@@ -8,13 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +46,8 @@ public class NotepadActivity extends AppCompatActivity {
     EditText titleText;
     String myResponse;
     JSONArray jsonArray;
+    ArrayList<String> rhymeList;
+    RhymeListAdaptor rhymeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +92,7 @@ public class NotepadActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_window, null);
 
-        // create the popup window
+        // FIXME Update layout to a fixed size
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = true; // lets taps outside the popup also dismiss it
@@ -99,24 +101,26 @@ public class NotepadActivity extends AppCompatActivity {
         // show the popup window
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
+        ListView listView = findViewById(R.id.rhymeListView); //FIXME Null view
+
         // Add Rhyme word buttons
         jsonArray = getRhymeWords(rhymeString);
-        TextView t = popupWindow.getContentView().findViewById(R.id.text_view_result);
+        rhymeList = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonobject = jsonArray.getJSONObject(i);
-                t.setText(jsonobject.getString("word"));
+                JSONObject jObject = jsonArray.getJSONObject(i);
+                rhymeList.add(jObject.getString("word"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // dismiss the popup window when touched
-        popupView.setOnTouchListener((v, event) -> {
-            popupWindow.dismiss();
-            return true;
-        });
+        rhymeAdapter = new RhymeListAdaptor(NotepadActivity.this, rhymeList);
+        listView.setAdapter(rhymeAdapter); //FIXME crash here - NPE
+        rhymeAdapter.notifyDataSetChanged();
     }
+
+
 
     @Override
     public boolean  onCreateOptionsMenu(Menu menu) {

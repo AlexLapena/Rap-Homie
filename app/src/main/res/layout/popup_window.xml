@@ -5,13 +5,11 @@
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary">
 
-    <TextView
-        android:id="@+id/text_view_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="30dp"
-        android:textSize="22sp"
-        android:text="Rhyme."/>
+    <ListView
+        android:id="@+id/rhymeListView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:divider="#0000CC"
+        android:dividerHeight="0.1dp"></ListView>
 
 </RelativeLayout>
