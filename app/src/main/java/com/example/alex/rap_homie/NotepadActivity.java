@@ -8,13 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,8 +48,8 @@ public class NotepadActivity extends AppCompatActivity {
     EditText songText;
     EditText titleText;
     String myResponse;
-    JSONArray jsonArray;
-    ArrayList<String> rhymeList;
+    public JSONArray jsonArray;
+    //ArrayList<String> rhymeList;
     RhymeListAdaptor rhymeAdapter;
 
     @Override
@@ -78,6 +81,8 @@ public class NotepadActivity extends AppCompatActivity {
 
             String rhymeString = songText.getText().toString().substring(selectionStart, selectionEnd);
             try {
+                // Hide keyboard for popup window
+                songText.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 onButtonShowPopupWindowClick(v, rhymeString);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -91,20 +96,17 @@ public class NotepadActivity extends AppCompatActivity {
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_window, null);
-
-        // FIXME Update layout to a fixed size
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
         boolean focusable = true; // lets taps outside the popup also dismiss it
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
-        // show the popup window
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-        ListView listView = popupView.findViewById(R.id.rhymeListView);
+        // Set popup header
+        ((TextView) popupWindow.getContentView().findViewById(R.id.rhymeWordTitle)).setText("Words that rhyme with " + rhymeString + ":");
 
         // Add Rhyme word buttons
-        jsonArray = getRhymeWords(rhymeString);
-        rhymeList = new ArrayList<>();
+        getRhymeWords(rhymeString);
+        ArrayList<String> rhymeList = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jObject = jsonArray.getJSONObject(i);
@@ -114,9 +116,14 @@ public class NotepadActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        ListView listView = popupView.findViewById(R.id.rhymeListView);
         rhymeAdapter = new RhymeListAdaptor(popupWindow.getContentView().getContext(), rhymeList);
         listView.setAdapter(rhymeAdapter);
         rhymeAdapter.notifyDataSetChanged();
+        rhymeAdapter.notifyDataSetChanged();
+
+        // show the popup window
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
     @Override
@@ -185,7 +192,7 @@ public class NotepadActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private JSONArray getRhymeWords(String rhymeInput) {
+    private void getRhymeWords(String rhymeInput) {
         OkHttpClient client = new OkHttpClient();
 
         String url = "https://api.datamuse.com/words?rel_rhy=" + rhymeInput;
@@ -210,11 +217,8 @@ public class NotepadActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                 }
             }
         });
-        // Fixme - first response is null
-        return jsonArray;
     }
 }

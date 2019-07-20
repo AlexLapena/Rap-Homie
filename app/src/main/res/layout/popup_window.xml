@@ -5,11 +5,39 @@
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary">
 
-    <ListView
-        android:id="@+id/rhymeListView"
+    <!--Header aligned to top -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/header"
+        android:gravity="center"
+        android:background="#FC9">
+
+        <TextView
+            android:id="@+id/rhymeWordTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="dsd"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="#000"
+            android:layout_alignParentTop="true"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:divider="#0000CC"
-        android:dividerHeight="0.1dp"></ListView>
+        android:scrollbars="vertical"
+        android:layout_below="@+id/header"
+        android:id="@+id/scrollableContents">
+
+        <ListView
+            android:id="@+id/rhymeListView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="#0000CC"
+            android:dividerHeight="0.1dp"></ListView>
+    </RelativeLayout>
 
 </RelativeLayout>
