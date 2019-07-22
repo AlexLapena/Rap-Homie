@@ -1,6 +1,8 @@
 package com.example.alex.rap_homie;
 
 import android.annotation.SuppressLint;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -101,6 +103,9 @@ public class NotepadActivity extends AppCompatActivity {
         boolean focusable = true; // lets taps outside the popup also dismiss it
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
+        // show the popup window
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
         // Set popup header
         ((TextView) popupWindow.getContentView().findViewById(R.id.rhymeWordTitle)).setText("Words that rhyme with " + rhymeString + ":");
 
@@ -116,14 +121,11 @@ public class NotepadActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // Add Rhyme buttons to the popup window
         ListView listView = popupView.findViewById(R.id.rhymeListView);
-        rhymeAdapter = new RhymeListAdaptor(popupWindow.getContentView().getContext(), rhymeList);
+        rhymeAdapter = new RhymeListAdaptor(popupWindow.getContentView().getContext(), rhymeList, popupWindow);
         listView.setAdapter(rhymeAdapter);
         rhymeAdapter.notifyDataSetChanged();
-        rhymeAdapter.notifyDataSetChanged();
-
-        // show the popup window
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 
     @Override
