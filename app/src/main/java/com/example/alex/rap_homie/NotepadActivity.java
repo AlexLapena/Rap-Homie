@@ -51,21 +51,20 @@ public class NotepadActivity extends AppCompatActivity {
     EditText titleText;
     String myResponse;
     public JSONArray jsonArray;
-    //ArrayList<String> rhymeList;
     RhymeListAdaptor rhymeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notepad_activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         String sessionId = getIntent().getStringExtra("SONG_TITLE_SELECTED");
-        titleText = (EditText) findViewById(R.id.titleText);
+        titleText = findViewById(R.id.titleText);
         titleText.setText(sessionId ,TextView.BufferType.EDITABLE);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> Save(titleText.getText().toString()));
 
         final Button button = findViewById(R.id.rhyme_button);
@@ -73,11 +72,12 @@ public class NotepadActivity extends AppCompatActivity {
             //onButtonShowPopupWindowClick(v, "egg"); // FIXME - Remove
         });
 
-        songText = (EditText) findViewById(R.id.EditText1);
+        songText = findViewById(R.id.EditText1);
         songText.setText(Open(titleText.getText().toString()));
 
         //Long click triggers rhymes (double tap would be nicer)
         songText.setOnLongClickListener(v -> {
+            // FIXME - get string without highlighting
             int selectionStart = songText.getSelectionStart();
             int selectionEnd = songText.getSelectionEnd();
 
@@ -123,7 +123,7 @@ public class NotepadActivity extends AppCompatActivity {
 
         // Add Rhyme buttons to the popup window
         ListView listView = popupView.findViewById(R.id.rhymeListView);
-        rhymeAdapter = new RhymeListAdaptor(popupWindow.getContentView().getContext(), rhymeList, popupWindow);
+        rhymeAdapter = new RhymeListAdaptor(popupWindow.getContentView().getContext(), rhymeList, popupWindow, songText);
         listView.setAdapter(rhymeAdapter);
         rhymeAdapter.notifyDataSetChanged();
     }

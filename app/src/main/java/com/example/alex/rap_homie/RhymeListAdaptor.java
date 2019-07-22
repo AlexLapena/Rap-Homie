@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
@@ -19,12 +20,14 @@ public class RhymeListAdaptor extends BaseAdapter {
     private final PopupWindow popupWindow;
     private ArrayList<String> wordList;
     private Context context;
+    private EditText songText;
     
-    public RhymeListAdaptor(Context context, ArrayList wordList, PopupWindow popupWindow) {
+    public RhymeListAdaptor(Context context, ArrayList wordList, PopupWindow popupWindow, EditText songText) {
         super();
         this.context = context;
         this.wordList = wordList;
         this.popupWindow = popupWindow;
+        this.songText = songText;
     }
 
     @Override
@@ -56,13 +59,26 @@ public class RhymeListAdaptor extends BaseAdapter {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Add rhyme word to clipboard: https://developer.android.com/guide/topics/text/copy-paste
+                //Add rhyme word to clipboard
                 ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE); //Might crash, haven't tested
                 ClipData clip = ClipData.newPlainText("RhymeClip", wordList.get(position));
                 clipboard.setPrimaryClip(clip);
-
                 Toast.makeText(context, "Selected rhyme: " + wordList.get(position), Toast.LENGTH_LONG).show();
+
+                //Close popupw window
                 popupWindow.dismiss();
+
+                //Wait for user to click textbox
+                songText.setOnClickListener(v -> {
+                    //Paste clipboard item, then wipe from clipboard
+                    ClipData clipData = clipboard.getPrimaryClip();
+                    ClipData.Item item = clipData.getItemAt(0);
+                    String pasteText = item.getText().toString();
+
+                    int cursorPosition = songText.getSelectionStart();
+                    songText.getText().insert(cursorPosition, pasteText);
+                    Toast.makeText(context, "Pos: " + cursorPosition, Toast.LENGTH_LONG).show();
+                });
             }
         });
 
