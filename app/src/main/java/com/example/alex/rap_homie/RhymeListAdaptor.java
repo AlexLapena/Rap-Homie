@@ -1,5 +1,6 @@
 package com.example.alex.rap_homie;
 
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -57,7 +58,10 @@ public class RhymeListAdaptor extends BaseAdapter {
             public void onClick(View view) {
                 //Add rhyme word to clipboard: https://developer.android.com/guide/topics/text/copy-paste
                 ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE); //Might crash, haven't tested
-                Toast.makeText(context, wordList.get(position) + " selected.", Toast.LENGTH_LONG).show();
+                ClipData clip = ClipData.newPlainText("RhymeClip", wordList.get(position));
+                clipboard.setPrimaryClip(clip);
+
+                Toast.makeText(context, "Selected rhyme: " + wordList.get(position), Toast.LENGTH_LONG).show();
                 popupWindow.dismiss();
             }
         });
