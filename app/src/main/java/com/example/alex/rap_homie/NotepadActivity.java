@@ -42,6 +42,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static android.R.id.home;
+
 
 /**
  * Editable notepad for creating song lyrics
@@ -53,6 +55,7 @@ public class NotepadActivity extends AppCompatActivity {
     public JSONArray jsonArray;
     RhymeListAdaptor rhymeAdapter;
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,17 +63,14 @@ public class NotepadActivity extends AppCompatActivity {
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Back Button
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> finish());
+
         String sessionId = getIntent().getStringExtra("SONG_TITLE_SELECTED");
         titleText = findViewById(R.id.titleText);
         titleText.setText(sessionId ,TextView.BufferType.EDITABLE);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> Save(titleText.getText().toString()));
-
-        final Button button = findViewById(R.id.rhyme_button);
-        button.setOnClickListener(v -> {
-            //onButtonShowPopupWindowClick(v, "egg"); // FIXME - Remove
-        });
 
         songText = findViewById(R.id.EditText1);
         songText.setText(Open(titleText.getText().toString()));
@@ -190,6 +190,9 @@ public class NotepadActivity extends AppCompatActivity {
                 Intent myIntent = new Intent(NotepadActivity.this, SongSelect.class);
                 NotepadActivity.this.startActivity(myIntent);
             }
+        }
+        else if (id == R.id.save_song) {
+            Save(titleText.getText().toString());
         }
         return super.onOptionsItemSelected(item);
     }
