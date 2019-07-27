@@ -68,7 +68,7 @@ public class RhymeListAdaptor extends BaseAdapter {
                 //Close popupw window
                 popupWindow.dismiss();
 
-                //Wait for user to click textbox
+                //Wait for user to select editText location, then paste
                 songText.setOnClickListener(v -> {
                     //Paste clipboard item, then wipe from clipboard
                     ClipData clipData = clipboard.getPrimaryClip();
@@ -77,7 +77,7 @@ public class RhymeListAdaptor extends BaseAdapter {
 
                     int cursorPosition = songText.getSelectionStart();
                     songText.getText().insert(cursorPosition, pasteText);
-                    Toast.makeText(context, "Pos: " + cursorPosition, Toast.LENGTH_LONG).show();
+                    v.setOnClickListener(null);
                 });
             }
         });
