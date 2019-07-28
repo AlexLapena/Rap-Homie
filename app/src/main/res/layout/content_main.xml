@@ -16,6 +16,8 @@
         android:gravity="top"
         android:id="@+id/EditText1"
         app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="5dp"
+        android:layout_margin="10dp"
         android:background="@android:color/transparent"/>
 
 </android.support.constraint.ConstraintLayout>
