@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +36,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -43,6 +45,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import static android.R.id.home;
+import static android.os.SystemClock.sleep;
 
 
 /**
@@ -197,8 +200,13 @@ public class NotepadActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getRhymeWords(String rhymeInput) {
+    private void getRhymeWords (String rhymeInput) {
         OkHttpClient client = new OkHttpClient();
+
+        // This is a Synchronous GET task - we need to wait for the process to finish
+        // TODO: Replace with an asynchronous task, and have a spinner for waiting for the rhyme words.
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         String url = "https://api.datamuse.com/words?rel_rhy=" + rhymeInput;
 
@@ -206,24 +214,13 @@ public class NotepadActivity extends AppCompatActivity {
                 .url(url)
                 .build();
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    myResponse = response.body().string();
-                    System.out.println(myResponse);
-                    try {
-                        jsonArray = new JSONArray(myResponse);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+        try {
+            Response response = client.newCall(request).execute();
+            jsonArray = new JSONArray(response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
