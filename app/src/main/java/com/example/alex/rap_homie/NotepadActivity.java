@@ -1,26 +1,21 @@
 package com.example.alex.rap_homie;
 
 import android.annotation.SuppressLint;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,17 +31,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import static android.R.id.home;
-import static android.os.SystemClock.sleep;
-
 
 /**
  * Editable notepad for creating song lyrics
@@ -54,7 +42,6 @@ import static android.os.SystemClock.sleep;
 public class NotepadActivity extends AppCompatActivity {
     EditText songText;
     EditText titleText;
-    String myResponse;
     public JSONArray jsonArray;
     RhymeListAdaptor rhymeAdapter;
 
@@ -125,9 +112,9 @@ public class NotepadActivity extends AppCompatActivity {
         }
 
         // Add Rhyme buttons to the popup window
-        ListView listView = popupView.findViewById(R.id.rhymeListView);
+        GridView gridView = popupView.findViewById(R.id.rhymeListView);
         rhymeAdapter = new RhymeListAdaptor(popupWindow.getContentView().getContext(), rhymeList, popupWindow, songText);
-        listView.setAdapter(rhymeAdapter);
+        gridView.setAdapter(rhymeAdapter);
         rhymeAdapter.notifyDataSetChanged();
     }
 

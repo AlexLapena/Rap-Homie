@@ -1,0 +1,5 @@
+<root>
+    <item name='okhttp3.Call okhttp3.Response execute()'>
+        <annotation name='org.jetbrains.annotations.NonBlocking' />
+    </item>
+</root>

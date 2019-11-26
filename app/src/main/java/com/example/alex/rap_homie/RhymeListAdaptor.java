@@ -60,12 +60,12 @@ public class RhymeListAdaptor extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 //Add rhyme word to clipboard
-                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE); //Might crash, haven't tested
+                ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("RhymeClip", wordList.get(position));
                 clipboard.setPrimaryClip(clip);
                 Toast.makeText(context, "Selected rhyme: " + wordList.get(position), Toast.LENGTH_LONG).show();
 
-                //Close popupw window
+                //Close popup window
                 popupWindow.dismiss();
 
                 //Wait for user to select editText location, then paste
